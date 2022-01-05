@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.db import models
+from django.urls import reverse
 
 from . import Actor, Category, Genre
 
@@ -23,11 +24,14 @@ class Movie(models.Model):
     fees_usa = models.PositiveIntegerField(
         'Fees in USA', default=0, help_text='amount in USD')
     fees_world = models.PositiveIntegerField(
-        'Fees in USA', default=0, help_text='amount in USD')
+        'World fees', default=0, help_text='amount in USD')
     category = models.ForeignKey(
         Category, verbose_name='category', on_delete=models.SET_NULL, null=True)
     url = models.SlugField(max_length=160, unique=True)
     draft = models.BooleanField('Draft', default=False)
+
+    def get_absolute_url(self):
+        return reverse("movie_detail", kwargs={"slug": self.url})
 
     def __str__(self):
         return self.title
